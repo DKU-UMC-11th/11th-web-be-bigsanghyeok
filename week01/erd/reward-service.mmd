@@ -1,0 +1,126 @@
+erDiagram
+    direction LR
+    member ||..o{ socialAccount : 로그인연결
+    member ||--o{ memberFoodCategory : 선호선택
+    foodCategory ||--o{ memberFoodCategory : 선호분류
+    member ||--o{ memberAgreement : 약관동의
+    terms ||--o{ memberAgreement : 동의대상
+    region ||..o{ store : 지역소속
+    foodCategory ||..o{ store : 가게분류
+    store ||..o{ mission : 미션제공
+    member ||..o{ memberMission : 미션도전
+    mission ||..o{ memberMission : 수행내역
+    member ||..o{ regionReward : 보상수령
+    region ||..o{ regionReward : 지역보상
+    memberMission ||..o| review : 완료후리뷰
+    review ||..o{ reviewImage : 사진첨부
+    member["member"] {
+        bigint id PK
+        varchar name
+        varchar nickname
+        varchar email "nullable"
+        varchar phone "nullable"
+        varchar gender
+        date birth_date
+        varchar address
+        varchar address_detail "nullable"
+        varchar profile_image_url "nullable"
+        varchar status
+        datetime created_at
+        datetime updated_at
+        datetime withdrawn_at "nullable"
+    }
+    socialAccount["social_account"] {
+        bigint id PK
+        bigint member_id FK
+        varchar provider
+        varchar provider_user_id
+        datetime created_at
+    }
+    foodCategory["food_category"] {
+        bigint id PK
+        varchar name UK
+    }
+    memberFoodCategory["member_food_category"] {
+        bigint member_id PK, FK
+        bigint food_category_id PK, FK
+    }
+    terms["terms"] {
+        bigint id PK
+        varchar code
+        varchar version
+        varchar title
+        text content
+        boolean is_required
+        datetime effective_at
+    }
+    memberAgreement["member_agreement"] {
+        bigint member_id PK, FK
+        bigint terms_id PK, FK
+        boolean agreed
+        datetime agreed_at "nullable"
+        datetime revoked_at "nullable"
+    }
+    region["region"] {
+        bigint id PK
+        varchar code UK
+        varchar name
+    }
+    store["store"] {
+        bigint id PK
+        bigint region_id FK
+        bigint food_category_id FK
+        varchar name
+        varchar address
+        text description "nullable"
+        varchar phone "nullable"
+        varchar image_url "nullable"
+        varchar status
+    }
+    mission["mission"] {
+        bigint id PK
+        bigint store_id FK
+        varchar title
+        text description
+        decimal min_spend
+        varchar reward_type
+        decimal reward_value
+        datetime starts_at
+        datetime ends_at
+        varchar status
+    }
+    memberMission["member_mission"] {
+        bigint id PK
+        bigint member_id FK
+        bigint mission_id FK
+        varchar status
+        datetime accepted_at
+        datetime completed_at "nullable"
+        varchar verification_code_hash "nullable"
+        datetime code_expires_at "nullable"
+        decimal paid_amount "nullable"
+        int awarded_points "nullable"
+        datetime updated_at
+    }
+    regionReward["region_reward"] {
+        bigint id PK
+        bigint member_id FK
+        bigint region_id FK
+        int cycle_no
+        int points
+        datetime awarded_at
+    }
+    review["review"] {
+        bigint id PK
+        bigint member_mission_id FK, UK
+        decimal rating
+        text content "nullable"
+        datetime created_at
+        datetime updated_at
+    }
+    reviewImage["review_image"] {
+        bigint id PK
+        bigint review_id FK
+        varchar image_url
+        smallint sort_order
+    }

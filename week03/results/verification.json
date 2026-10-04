@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "http_cases": 12,
+  "mysql_version": "26.7.0",
+  "executed_at": "2026-10-04T23:35:54.508010+09:00",
+  "fixture_sha256": {
+    "01_schema.sql": "152550e21c366b685d8439629bb5372e5de0165244f3e297105b0cd2a8c7e4bf",
+    "02_seed.sql": "db3b76dbf0c52dd197daee39f1f6502be18078de599e93e22fd3c0b1898913c8"
+  },
+  "rental_duration_seconds": 604800,
+  "isolation": "Temporary local MySQL; original week02 SQL unchanged",
+  "expected_errors": [
+    "titel -> 500 / NOT NULL",
+    "invalid foreign key -> 500",
+    "non-numeric path -> 400"
+  ]
+}

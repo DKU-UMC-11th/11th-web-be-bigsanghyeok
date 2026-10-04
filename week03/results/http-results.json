@@ -1,0 +1,241 @@
+[
+  {
+    "name": "실습 1: 전체 도서 조회",
+    "method": "GET",
+    "url": "http://127.0.0.1:8080/books",
+    "request_body": null,
+    "status": 200,
+    "content_type": "application/json",
+    "response": [
+      {
+        "book_id": 1,
+        "category_id": 1,
+        "title": "달빛 도서관",
+        "description": "소설",
+        "is_available": true
+      },
+      {
+        "book_id": 2,
+        "category_id": 1,
+        "title": "겨울의 편지",
+        "description": "에세이",
+        "is_available": false
+      },
+      {
+        "book_id": 3,
+        "category_id": 2,
+        "title": "우주를 읽는 법",
+        "description": "과학 교양",
+        "is_available": true
+      }
+    ]
+  },
+  {
+    "name": "실습 2: 도서 등록",
+    "method": "POST",
+    "url": "http://127.0.0.1:8080/books",
+    "request_body": {
+      "categoryId": 1,
+      "title": "클린 코드",
+      "description": "애자일 소프트웨어 장인 정신"
+    },
+    "status": 200,
+    "content_type": "text/plain;charset=UTF-8",
+    "response": "도서 등록이 완료되었습니다!"
+  },
+  {
+    "name": "실습 2: 등록 후 재조회",
+    "method": "GET",
+    "url": "http://127.0.0.1:8080/books",
+    "request_body": null,
+    "status": 200,
+    "content_type": "application/json",
+    "response": [
+      {
+        "book_id": 1,
+        "category_id": 1,
+        "title": "달빛 도서관",
+        "description": "소설",
+        "is_available": true
+      },
+      {
+        "book_id": 2,
+        "category_id": 1,
+        "title": "겨울의 편지",
+        "description": "에세이",
+        "is_available": false
+      },
+      {
+        "book_id": 3,
+        "category_id": 2,
+        "title": "우주를 읽는 법",
+        "description": "과학 교양",
+        "is_available": true
+      },
+      {
+        "book_id": 4,
+        "category_id": 1,
+        "title": "클린 코드",
+        "description": "애자일 소프트웨어 장인 정신",
+        "is_available": true
+      }
+    ]
+  },
+  {
+    "name": "필수 1: 카테고리 1",
+    "method": "GET",
+    "url": "http://127.0.0.1:8080/books/category/1",
+    "request_body": null,
+    "status": 200,
+    "content_type": "application/json",
+    "response": [
+      {
+        "book_id": 1,
+        "category_id": 1,
+        "title": "달빛 도서관",
+        "description": "소설",
+        "is_available": true
+      },
+      {
+        "book_id": 2,
+        "category_id": 1,
+        "title": "겨울의 편지",
+        "description": "에세이",
+        "is_available": false
+      },
+      {
+        "book_id": 4,
+        "category_id": 1,
+        "title": "클린 코드",
+        "description": "애자일 소프트웨어 장인 정신",
+        "is_available": true
+      }
+    ]
+  },
+  {
+    "name": "필수 1: 카테고리 2",
+    "method": "GET",
+    "url": "http://127.0.0.1:8080/books/category/2",
+    "request_body": null,
+    "status": 200,
+    "content_type": "application/json",
+    "response": [
+      {
+        "book_id": 3,
+        "category_id": 2,
+        "title": "우주를 읽는 법",
+        "description": "과학 교양",
+        "is_available": true
+      }
+    ]
+  },
+  {
+    "name": "필수 1: 카테고리 999",
+    "method": "GET",
+    "url": "http://127.0.0.1:8080/books/category/999",
+    "request_body": null,
+    "status": 200,
+    "content_type": "application/json",
+    "response": []
+  },
+  {
+    "name": "필수 1: 숫자가 아닌 경로 변수",
+    "method": "GET",
+    "url": "http://127.0.0.1:8080/books/category/abc",
+    "request_body": null,
+    "status": 400,
+    "content_type": "application/json",
+    "response": {
+      "timestamp": "2026-10-04T14:35:53.617+00:00",
+      "status": 400,
+      "error": "Bad Request",
+      "path": "/books/category/abc"
+    }
+  },
+  {
+    "name": "필수 2: 대여 기록 생성",
+    "method": "POST",
+    "url": "http://127.0.0.1:8080/rentals",
+    "request_body": {
+      "userId": 1,
+      "bookId": 4
+    },
+    "status": 201,
+    "content_type": "application/json",
+    "response": {
+      "message": "도서 대여 기록이 생성되었습니다!"
+    }
+  },
+  {
+    "name": "실습 5: titel 오타",
+    "method": "POST",
+    "url": "http://127.0.0.1:8080/books",
+    "request_body": {
+      "categoryId": 1,
+      "titel": "해리포터",
+      "description": "오타 체험"
+    },
+    "status": 500,
+    "content_type": "application/json",
+    "response": {
+      "timestamp": "2026-10-04T14:35:54.248+00:00",
+      "status": 500,
+      "error": "Internal Server Error",
+      "path": "/books"
+    }
+  },
+  {
+    "name": "필수 2: 존재하지 않는 외래키",
+    "method": "POST",
+    "url": "http://127.0.0.1:8080/rentals",
+    "request_body": {
+      "userId": 999,
+      "bookId": 4
+    },
+    "status": 500,
+    "content_type": "application/json",
+    "response": {
+      "timestamp": "2026-10-04T14:35:54.372+00:00",
+      "status": 500,
+      "error": "Internal Server Error",
+      "path": "/rentals"
+    }
+  },
+  {
+    "name": "파라미터 바인딩: SQL 문자열도 제목으로 저장",
+    "method": "POST",
+    "url": "http://127.0.0.1:8080/books",
+    "request_body": {
+      "categoryId": 2,
+      "title": "'); DROP TABLE book; --",
+      "description": null
+    },
+    "status": 200,
+    "content_type": "text/plain;charset=UTF-8",
+    "response": "도서 등록이 완료되었습니다!"
+  },
+  {
+    "name": "파라미터 바인딩: 테이블과 저장값 재확인",
+    "method": "GET",
+    "url": "http://127.0.0.1:8080/books/category/2",
+    "request_body": null,
+    "status": 200,
+    "content_type": "application/json",
+    "response": [
+      {
+        "book_id": 3,
+        "category_id": 2,
+        "title": "우주를 읽는 법",
+        "description": "과학 교양",
+        "is_available": true
+      },
+      {
+        "book_id": 5,
+        "category_id": 2,
+        "title": "'); DROP TABLE book; --",
+        "description": null,
+        "is_available": true
+      }
+    ]
+  }
+]

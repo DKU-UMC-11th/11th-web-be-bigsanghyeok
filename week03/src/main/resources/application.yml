@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: umc-study
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PW}
+
+server:
+  port: ${SERVER_PORT:8080}

@@ -1,0 +1,9 @@
+.gradle/
+build/
+.idea/
+*.iml
+.env
+.env.*
+!.env.example
+.validation-runtime/
+__pycache__/

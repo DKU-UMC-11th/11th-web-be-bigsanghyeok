@@ -1,0 +1,2 @@
+rental_id	user_id	book_id	rented_at	due_at	returned_at	duration_seconds	current_time_matches
+3	1	4	2026-10-04 23:35:53	2026-10-11 23:35:53	NULL	604800	1

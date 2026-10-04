@@ -1,0 +1,346 @@
+{
+  "info": {
+    "name": "UMC 3주차 — Spring 실습과 필수 미션",
+    "description": "위에서부터 순서대로 실행합니다. 예시는 Python HTTP 클라이언트로 실제 서버에서 얻은 결과입니다.\n도서 POST 응답은 워크북과 동일한 문자열입니다. 등록 후 GET 테스트가 createdBookId를 설정합니다.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 실습 1 — 전체 도서 조회",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/books"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+              "pm.test(\"도서 JSON 배열\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "실제 HTTP 검증 응답 예시",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/books"
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "_postman_previewlanguage": "json",
+          "body": "[\n  {\n    \"book_id\": 1,\n    \"category_id\": 1,\n    \"title\": \"달빛 도서관\",\n    \"description\": \"소설\",\n    \"is_available\": true\n  },\n  {\n    \"book_id\": 2,\n    \"category_id\": 1,\n    \"title\": \"겨울의 편지\",\n    \"description\": \"에세이\",\n    \"is_available\": false\n  },\n  {\n    \"book_id\": 3,\n    \"category_id\": 2,\n    \"title\": \"우주를 읽는 법\",\n    \"description\": \"과학 교양\",\n    \"is_available\": true\n  }\n]"
+        }
+      ]
+    },
+    {
+      "name": "02 실습 2 — 클린 코드 등록",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/books",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"categoryId\": 1,\n  \"title\": \"클린 코드\",\n  \"description\": \"애자일 소프트웨어 장인 정신\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+              "pm.test(\"등록 완료\", () => pm.expect(pm.response.text()).to.eql(\"도서 등록이 완료되었습니다!\"));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "실제 HTTP 검증 응답 예시",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/books",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoryId\": 1,\n  \"title\": \"클린 코드\",\n  \"description\": \"애자일 소프트웨어 장인 정신\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain;charset=UTF-8"
+            }
+          ],
+          "_postman_previewlanguage": "text",
+          "body": "도서 등록이 완료되었습니다!"
+        }
+      ]
+    },
+    {
+      "name": "03 실습 2 — 등록 후 재조회",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/books"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+              "const books = pm.response.json();",
+              "const created = books.filter(b => b.title === \"클린 코드\").sort((a,b) => b.book_id-a.book_id)[0];",
+              "pm.test(\"신규 도서 조회\", () => pm.expect(created).to.exist);",
+              "if (created) pm.collectionVariables.set(\"createdBookId\", created.book_id);"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "실제 HTTP 검증 응답 예시",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/books"
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "_postman_previewlanguage": "json",
+          "body": "[\n  {\n    \"book_id\": 1,\n    \"category_id\": 1,\n    \"title\": \"달빛 도서관\",\n    \"description\": \"소설\",\n    \"is_available\": true\n  },\n  {\n    \"book_id\": 2,\n    \"category_id\": 1,\n    \"title\": \"겨울의 편지\",\n    \"description\": \"에세이\",\n    \"is_available\": false\n  },\n  {\n    \"book_id\": 3,\n    \"category_id\": 2,\n    \"title\": \"우주를 읽는 법\",\n    \"description\": \"과학 교양\",\n    \"is_available\": true\n  },\n  {\n    \"book_id\": 4,\n    \"category_id\": 1,\n    \"title\": \"클린 코드\",\n    \"description\": \"애자일 소프트웨어 장인 정신\",\n    \"is_available\": true\n  }\n]"
+        }
+      ]
+    },
+    {
+      "name": "04 필수 1 — 카테고리 1 조회",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/books/category/1"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+              "pm.test(\"카테고리 1만 포함\", () => {",
+              "  const books = pm.response.json();",
+              "  pm.expect(books).to.be.an(\"array\").that.is.not.empty;",
+              "  pm.expect(books.every(b => b.category_id === 1)).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "실제 HTTP 검증 응답 예시",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/books/category/1"
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "_postman_previewlanguage": "json",
+          "body": "[\n  {\n    \"book_id\": 1,\n    \"category_id\": 1,\n    \"title\": \"달빛 도서관\",\n    \"description\": \"소설\",\n    \"is_available\": true\n  },\n  {\n    \"book_id\": 2,\n    \"category_id\": 1,\n    \"title\": \"겨울의 편지\",\n    \"description\": \"에세이\",\n    \"is_available\": false\n  },\n  {\n    \"book_id\": 4,\n    \"category_id\": 1,\n    \"title\": \"클린 코드\",\n    \"description\": \"애자일 소프트웨어 장인 정신\",\n    \"is_available\": true\n  }\n]"
+        }
+      ]
+    },
+    {
+      "name": "05 필수 2 — 방금 등록한 도서 대여",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/rentals",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": 1,\n  \"bookId\": {{createdBookId}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"201 Created\", () => pm.response.to.have.status(201));",
+              "pm.test(\"대여 기록 생성\", () => pm.expect(pm.response.json().message).to.eql(\"도서 대여 기록이 생성되었습니다!\"));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "실제 HTTP 검증 응답 예시",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/rentals",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"bookId\": {{createdBookId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "_postman_previewlanguage": "json",
+          "body": "{\n  \"message\": \"도서 대여 기록이 생성되었습니다!\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "06 실습 5 — titel 오타 체험 (예상 500)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/books",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"categoryId\": 1,\n  \"titel\": \"해리포터\",\n  \"description\": \"오타 체험\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"워크북 오타 실습: 500\", () => pm.response.to.have.status(500));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "실제 HTTP 검증 응답 예시",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/books",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoryId\": 1,\n  \"titel\": \"해리포터\",\n  \"description\": \"오타 체험\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Internal Server Error",
+          "code": 500,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "_postman_previewlanguage": "json",
+          "body": "{\n  \"timestamp\": \"2026-10-04T14:27:18.188+00:00\",\n  \"status\": 500,\n  \"error\": \"Internal Server Error\",\n  \"path\": \"/books\"\n}"
+        }
+      ]
+    }
+  ]
+}

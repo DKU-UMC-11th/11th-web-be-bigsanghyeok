@@ -1,0 +1,209 @@
+[
+  {
+    "name": "닉네임: 중복",
+    "method": "GET",
+    "url": "http://127.0.0.1:18085/members/nickname/%EC%88%98%ED%98%84",
+    "request_headers": {},
+    "status": 200,
+    "response_headers": {
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Date": "Sun, 01 Nov 2026 13:49:06 GMT",
+      "Connection": "close"
+    },
+    "response": {
+      "available": false
+    }
+  },
+  {
+    "name": "닉네임: 사용 가능",
+    "method": "GET",
+    "url": "http://127.0.0.1:18085/members/nickname/%EC%83%88%EC%98%81%ED%99%94%ED%8C%AC",
+    "request_headers": {},
+    "status": 200,
+    "response_headers": {
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Date": "Sun, 01 Nov 2026 13:49:06 GMT",
+      "Connection": "close"
+    },
+    "response": {
+      "available": true
+    }
+  },
+  {
+    "name": "이메일: 중복",
+    "method": "GET",
+    "url": "http://127.0.0.1:18085/members/email/noco%40umc.com",
+    "request_headers": {},
+    "status": 200,
+    "response_headers": {
+      "Content-Disposition": "inline;filename=f.txt",
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Date": "Sun, 01 Nov 2026 13:49:06 GMT",
+      "Connection": "close"
+    },
+    "response": {
+      "available": false
+    }
+  },
+  {
+    "name": "이메일: 사용 가능",
+    "method": "GET",
+    "url": "http://127.0.0.1:18085/members/email/new%40example.com",
+    "request_headers": {},
+    "status": 200,
+    "response_headers": {
+      "Content-Disposition": "inline;filename=f.txt",
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Date": "Sun, 01 Nov 2026 13:49:06 GMT",
+      "Connection": "close"
+    },
+    "response": {
+      "available": true
+    }
+  },
+  {
+    "name": "회원 1: 최신순 평점",
+    "method": "GET",
+    "url": "http://127.0.0.1:18085/members/1/ratings",
+    "request_headers": {},
+    "status": 200,
+    "response_headers": {
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Date": "Sun, 01 Nov 2026 13:49:06 GMT",
+      "Connection": "close"
+    },
+    "response": [
+      {
+        "ratingId": 2,
+        "movieId": 155,
+        "score": 4,
+        "comment": "다시 봐도 명작",
+        "createdAt": "2026-11-01T22:48:49",
+        "updatedAt": "2026-11-01T22:48:49"
+      },
+      {
+        "ratingId": 1,
+        "movieId": 550,
+        "score": 5,
+        "comment": "최고의 영화!",
+        "createdAt": "2026-11-01T22:48:49",
+        "updatedAt": "2026-11-01T22:48:49"
+      }
+    ]
+  },
+  {
+    "name": "회원 2: 다른 회원 데이터 분리",
+    "method": "GET",
+    "url": "http://127.0.0.1:18085/members/2/ratings",
+    "request_headers": {},
+    "status": 200,
+    "response_headers": {
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Date": "Sun, 01 Nov 2026 13:49:06 GMT",
+      "Connection": "close"
+    },
+    "response": [
+      {
+        "ratingId": 3,
+        "movieId": 550,
+        "score": 3,
+        "comment": "호불호가 갈릴 것 같아요",
+        "createdAt": "2026-11-01T22:48:49",
+        "updatedAt": "2026-11-01T22:48:49"
+      }
+    ]
+  },
+  {
+    "name": "평점 없는 회원: 빈 목록",
+    "method": "GET",
+    "url": "http://127.0.0.1:18085/members/3/ratings",
+    "request_headers": {},
+    "status": 200,
+    "response_headers": {
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Date": "Sun, 01 Nov 2026 13:49:06 GMT",
+      "Connection": "close"
+    },
+    "response": []
+  },
+  {
+    "name": "없는 회원: 404",
+    "method": "GET",
+    "url": "http://127.0.0.1:18085/members/999/ratings",
+    "request_headers": {},
+    "status": 404,
+    "response_headers": {
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Date": "Sun, 01 Nov 2026 13:49:06 GMT",
+      "Connection": "close"
+    },
+    "response": {
+      "timestamp": "2026-11-01T13:49:06.554+00:00",
+      "status": 404,
+      "error": "Not Found",
+      "message": "존재하지 않는 유저입니다.",
+      "path": "/members/999/ratings"
+    }
+  },
+  {
+    "name": "숫자가 아닌 회원 ID: 400",
+    "method": "GET",
+    "url": "http://127.0.0.1:18085/members/abc/ratings",
+    "request_headers": {},
+    "status": 400,
+    "response_headers": {
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Date": "Sun, 01 Nov 2026 13:49:06 GMT",
+      "Connection": "close"
+    },
+    "response": {
+      "timestamp": "2026-11-01T13:49:06.598+00:00",
+      "status": 400,
+      "error": "Bad Request",
+      "message": "Method parameter 'memberId': Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: \"abc\"",
+      "path": "/members/abc/ratings"
+    }
+  },
+  {
+    "name": "브라우저 출처 GET",
+    "method": "GET",
+    "url": "http://127.0.0.1:18085/members/1/ratings",
+    "request_headers": {
+      "Origin": "http://localhost:5173"
+    },
+    "status": 200,
+    "response_headers": {
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Date": "Sun, 01 Nov 2026 13:49:06 GMT",
+      "Connection": "close"
+    },
+    "response": [
+      {
+        "ratingId": 2,
+        "movieId": 155,
+        "score": 4,
+        "comment": "다시 봐도 명작",
+        "createdAt": "2026-11-01T22:48:49",
+        "updatedAt": "2026-11-01T22:48:49"
+      },
+      {
+        "ratingId": 1,
+        "movieId": 550,
+        "score": 5,
+        "comment": "최고의 영화!",
+        "createdAt": "2026-11-01T22:48:49",
+        "updatedAt": "2026-11-01T22:48:49"
+      }
+    ]
+  }
+]

@@ -1,0 +1,496 @@
+{
+  "info": {
+    "name": "Week05 영화 평점 API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:18085"
+    }
+  ],
+  "item": [
+    {
+      "name": "닉네임: 중복",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/members/nickname/%EC%88%98%ED%98%84"
+      },
+      "response": [
+        {
+          "name": "실제 HTTP 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/members/nickname/%EC%88%98%ED%98%84"
+          },
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"available\": false\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "닉네임: 사용 가능",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/members/nickname/%EC%83%88%EC%98%81%ED%99%94%ED%8C%AC"
+      },
+      "response": [
+        {
+          "name": "실제 HTTP 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/members/nickname/%EC%83%88%EC%98%81%ED%99%94%ED%8C%AC"
+          },
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"available\": true\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "이메일: 중복",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/members/email/noco%40umc.com"
+      },
+      "response": [
+        {
+          "name": "실제 HTTP 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/members/email/noco%40umc.com"
+          },
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"available\": false\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "이메일: 사용 가능",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/members/email/new%40example.com"
+      },
+      "response": [
+        {
+          "name": "실제 HTTP 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/members/email/new%40example.com"
+          },
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"available\": true\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "회원 1: 최신순 평점",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/members/1/ratings"
+      },
+      "response": [
+        {
+          "name": "실제 HTTP 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/members/1/ratings"
+          },
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[\n  {\n    \"ratingId\": 2,\n    \"movieId\": 155,\n    \"score\": 4,\n    \"comment\": \"다시 봐도 명작\",\n    \"createdAt\": \"2026-11-01T22:50:10\",\n    \"updatedAt\": \"2026-11-01T22:50:10\"\n  },\n  {\n    \"ratingId\": 1,\n    \"movieId\": 550,\n    \"score\": 5,\n    \"comment\": \"최고의 영화!\",\n    \"createdAt\": \"2026-11-01T22:50:10\",\n    \"updatedAt\": \"2026-11-01T22:50:10\"\n  }\n]"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "회원 2: 다른 회원 데이터 분리",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/members/2/ratings"
+      },
+      "response": [
+        {
+          "name": "실제 HTTP 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/members/2/ratings"
+          },
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[\n  {\n    \"ratingId\": 3,\n    \"movieId\": 550,\n    \"score\": 3,\n    \"comment\": \"호불호가 갈릴 것 같아요\",\n    \"createdAt\": \"2026-11-01T22:50:10\",\n    \"updatedAt\": \"2026-11-01T22:50:10\"\n  }\n]"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "평점 없는 회원: 빈 목록",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/members/3/ratings"
+      },
+      "response": [
+        {
+          "name": "실제 HTTP 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/members/3/ratings"
+          },
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[]"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "없는 회원: 404",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/members/999/ratings"
+      },
+      "response": [
+        {
+          "name": "실제 HTTP 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/members/999/ratings"
+          },
+          "code": 404,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-11-01T13:50:27.675+00:00\",\n  \"status\": 404,\n  \"error\": \"Not Found\",\n  \"message\": \"존재하지 않는 유저입니다.\",\n  \"path\": \"/members/999/ratings\"\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status 404\", () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "숫자가 아닌 회원 ID: 400",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/members/abc/ratings"
+      },
+      "response": [
+        {
+          "name": "실제 HTTP 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/members/abc/ratings"
+          },
+          "code": 400,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"timestamp\": \"2026-11-01T13:50:27.718+00:00\",\n  \"status\": 400,\n  \"error\": \"Bad Request\",\n  \"message\": \"Method parameter 'memberId': Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: \\\"abc\\\"\",\n  \"path\": \"/members/abc/ratings\"\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status 400\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "브라우저 출처 GET",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Origin",
+            "value": "http://localhost:5173"
+          }
+        ],
+        "url": "{{baseUrl}}/members/1/ratings"
+      },
+      "response": [
+        {
+          "name": "실제 HTTP 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Origin",
+                "value": "http://localhost:5173"
+              }
+            ],
+            "url": "{{baseUrl}}/members/1/ratings"
+          },
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[\n  {\n    \"ratingId\": 2,\n    \"movieId\": 155,\n    \"score\": 4,\n    \"comment\": \"다시 봐도 명작\",\n    \"createdAt\": \"2026-11-01T22:50:10\",\n    \"updatedAt\": \"2026-11-01T22:50:10\"\n  },\n  {\n    \"ratingId\": 1,\n    \"movieId\": 550,\n    \"score\": 5,\n    \"comment\": \"최고의 영화!\",\n    \"createdAt\": \"2026-11-01T22:50:10\",\n    \"updatedAt\": \"2026-11-01T22:50:10\"\n  }\n]"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "CORS preflight",
+      "request": {
+        "method": "OPTIONS",
+        "header": [
+          {
+            "key": "Access-Control-Request-Method",
+            "value": "GET"
+          },
+          {
+            "key": "Origin",
+            "value": "http://localhost:5173"
+          }
+        ],
+        "url": "{{baseUrl}}/members/1/ratings"
+      },
+      "response": [
+        {
+          "name": "실제 HTTP 결과",
+          "originalRequest": {
+            "method": "OPTIONS",
+            "header": [
+              {
+                "key": "Access-Control-Request-Method",
+                "value": "GET"
+              },
+              {
+                "key": "Origin",
+                "value": "http://localhost:5173"
+              }
+            ],
+            "url": "{{baseUrl}}/members/1/ratings"
+          },
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "\"\""
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "허용하지 않은 출처 거부",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Origin",
+            "value": "http://untrusted.example"
+          }
+        ],
+        "url": "{{baseUrl}}/members/1/ratings"
+      },
+      "response": [
+        {
+          "name": "실제 HTTP 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Origin",
+                "value": "http://untrusted.example"
+              }
+            ],
+            "url": "{{baseUrl}}/members/1/ratings"
+          },
+          "code": 403,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "\"Invalid CORS request\""
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status 403\", () => pm.response.to.have.status(403));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

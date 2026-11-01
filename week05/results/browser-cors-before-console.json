@@ -1,0 +1,20 @@
+[
+  {
+    "level": "error",
+    "message": "TypeError: Failed to fetch\n    at request (http://localhost:5173/app.js:14:28)\n    at HTMLFormElement.<anonymous> (http://localhost:5173/app.js:34:5)",
+    "timestamp": "2026-11-01T13:49:38.552Z",
+    "url": "http://localhost:5173/app.js"
+  },
+  {
+    "level": "error",
+    "message": "TypeError: Failed to fetch\n    at request (http://localhost:5173/app.js:14:28)\n    at HTMLFormElement.<anonymous> (http://localhost:5173/app.js:34:5)",
+    "timestamp": "2026-11-01T13:49:38.610Z",
+    "url": "http://localhost:5173/app.js"
+  },
+  {
+    "level": "error",
+    "message": "TypeError: Failed to fetch\n    at request (http://localhost:5173/app.js:14:28)\n    at HTMLFormElement.<anonymous> (http://localhost:5173/app.js:43:3)",
+    "timestamp": "2026-11-01T13:49:38.680Z",
+    "url": "http://localhost:5173/app.js"
+  }
+]

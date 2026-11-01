@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CineLog — 회원과 평점</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header><a class="brand" href="./">CineLog<span>나의 영화 기록</span></a><span class="tag">회원 & 평점</span></header>
+  <main>
+    <section class="intro"><p class="eyebrow">YOUR NEXT MOVIE STARTS HERE</p><h1>좋은 영화는,<br>나만의 기록이 되니까.</h1><p>사용할 닉네임과 이메일을 확인하고, 회원이 남긴 영화 평점을 만나보세요.</p></section>
+    <div class="layout">
+      <section class="panel account"><div class="section-heading"><span class="number">01</span><div><h2>나의 이름 준비하기</h2><p>이미 사용 중인지 먼저 확인해 보세요.</p></div></div>
+        <form id="nickname-form"><label for="nickname">닉네임</label><div class="input-row"><input id="nickname" value="수현" required autocomplete="off"><button>중복 확인</button></div><p id="nickname-feedback" class="feedback" aria-live="polite">닉네임을 입력하고 확인해 주세요.</p></form>
+        <form id="email-form"><label for="email">이메일</label><div class="input-row"><input id="email" value="noco@umc.com" required autocomplete="off"><button>중복 확인</button></div><p id="email-feedback" class="feedback" aria-live="polite">이메일을 입력하고 확인해 주세요.</p></form>
+        <p class="note">지금은 가입 전 정보를 확인하는 단계예요.</p>
+      </section>
+      <section class="panel ratings"><div class="section-heading"><span class="number">02</span><div><h2>회원의 영화 노트</h2><p>남긴 평점을 최신 등록순으로 살펴보세요.</p></div></div>
+        <form id="ratings-form"><label for="member-id">회원 번호</label><div class="input-row"><input id="member-id" type="number" value="1" required><button>평점 보기</button></div></form>
+        <p id="ratings-feedback" class="feedback" aria-live="polite">회원 번호를 입력해 주세요.</p><div id="ratings-list" class="rating-list"></div>
+      </section>
+    </div>
+    <details open class="responses"><summary>요청 결과 확인 <span>서버에서 받은 응답</span></summary><div class="response-grid"><div><h3>닉네임 <span id="nickname-status">대기</span></h3><pre id="nickname-json">아직 요청하지 않았습니다.</pre></div><div><h3>이메일 <span id="email-status">대기</span></h3><pre id="email-json">아직 요청하지 않았습니다.</pre></div><div><h3>평점 목록 <span id="ratings-status">대기</span></h3><pre id="ratings-json">아직 요청하지 않았습니다.</pre></div></div></details>
+  </main><footer>CineLog · 영화 평점 서비스 <span>Week 05</span></footer>
+  <script src="app.js"></script>
+</body>
+</html>

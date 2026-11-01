@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "http_cases": 12,
+  "mysql_version": "26.7.0",
+  "cors_enabled": true,
+  "executed_at": "2026-11-01T22:50:27.887331+09:00",
+  "fixture_sha256": {
+    "01_schema.sql": "487eb0afa1e5613af42923b48a6ddd3562779f286c3cb08711ffffb912a98af8",
+    "02_seed.sql": "ad17fe9843d69bf550bc15e307646df72c1c3adccab524a7ceb2937c4a6ff7ce"
+  }
+}

@@ -1,0 +1,275 @@
+[
+  {
+    "name": "GET: 최신순 및 응답 DTO",
+    "method": "GET",
+    "url": "http://127.0.0.1:18084/books",
+    "request_body": null,
+    "status": 200,
+    "response": [
+      {
+        "bookId": 3,
+        "title": "우주를 읽는 법",
+        "description": "과학 교양",
+        "categoryName": "과학",
+        "isAvailable": true
+      },
+      {
+        "bookId": 2,
+        "title": "겨울의 편지",
+        "description": "에세이",
+        "categoryName": "문학",
+        "isAvailable": false
+      },
+      {
+        "bookId": 1,
+        "title": "달빛 도서관",
+        "description": "소설",
+        "categoryName": "문학",
+        "isAvailable": true
+      }
+    ]
+  },
+  {
+    "name": "POST: 정상 도서 등록",
+    "method": "POST",
+    "url": "http://127.0.0.1:18084/books",
+    "request_body": {
+      "categoryId": 1,
+      "title": "클린 코드",
+      "description": "ORM 필수 미션 등록 검증"
+    },
+    "status": 201,
+    "response": {
+      "bookId": 4,
+      "title": "클린 코드",
+      "description": "ORM 필수 미션 등록 검증",
+      "categoryName": "문학",
+      "isAvailable": true
+    }
+  },
+  {
+    "name": "GET: 등록 후 최신 도서 확인",
+    "method": "GET",
+    "url": "http://127.0.0.1:18084/books",
+    "request_body": null,
+    "status": 200,
+    "response": [
+      {
+        "bookId": 4,
+        "title": "클린 코드",
+        "description": "ORM 필수 미션 등록 검증",
+        "categoryName": "문학",
+        "isAvailable": true
+      },
+      {
+        "bookId": 3,
+        "title": "우주를 읽는 법",
+        "description": "과학 교양",
+        "categoryName": "과학",
+        "isAvailable": true
+      },
+      {
+        "bookId": 2,
+        "title": "겨울의 편지",
+        "description": "에세이",
+        "categoryName": "문학",
+        "isAvailable": false
+      },
+      {
+        "bookId": 1,
+        "title": "달빛 도서관",
+        "description": "소설",
+        "categoryName": "문학",
+        "isAvailable": true
+      }
+    ]
+  },
+  {
+    "name": "POST: 설명 생략 및 제목 100자 경계",
+    "method": "POST",
+    "url": "http://127.0.0.1:18084/books",
+    "request_body": {
+      "categoryId": 2,
+      "title": "가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가"
+    },
+    "status": 201,
+    "response": {
+      "bookId": 5,
+      "title": "가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가",
+      "description": null,
+      "categoryName": "과학",
+      "isAvailable": true
+    }
+  },
+  {
+    "name": "400: 빈 제목",
+    "method": "POST",
+    "url": "http://127.0.0.1:18084/books",
+    "request_body": {
+      "categoryId": 1,
+      "title": ""
+    },
+    "status": 400,
+    "response": {
+      "type": "about:blank",
+      "title": "Bad Request",
+      "status": 400,
+      "detail": "요청 값을 확인해주세요.",
+      "instance": "/books",
+      "errors": {
+        "title": "공백일 수 없습니다"
+      }
+    }
+  },
+  {
+    "name": "400: 공백 제목",
+    "method": "POST",
+    "url": "http://127.0.0.1:18084/books",
+    "request_body": {
+      "categoryId": 1,
+      "title": "   "
+    },
+    "status": 400,
+    "response": {
+      "type": "about:blank",
+      "title": "Bad Request",
+      "status": 400,
+      "detail": "요청 값을 확인해주세요.",
+      "instance": "/books",
+      "errors": {
+        "title": "공백일 수 없습니다"
+      }
+    }
+  },
+  {
+    "name": "400: 제목 누락",
+    "method": "POST",
+    "url": "http://127.0.0.1:18084/books",
+    "request_body": {
+      "categoryId": 1
+    },
+    "status": 400,
+    "response": {
+      "type": "about:blank",
+      "title": "Bad Request",
+      "status": 400,
+      "detail": "요청 값을 확인해주세요.",
+      "instance": "/books",
+      "errors": {
+        "title": "공백일 수 없습니다"
+      }
+    }
+  },
+  {
+    "name": "400: title 대신 titel 오타",
+    "method": "POST",
+    "url": "http://127.0.0.1:18084/books",
+    "request_body": {
+      "categoryId": 1,
+      "titel": "오타"
+    },
+    "status": 400,
+    "response": {
+      "type": "about:blank",
+      "title": "Bad Request",
+      "status": 400,
+      "detail": "요청 값을 확인해주세요.",
+      "instance": "/books",
+      "errors": {
+        "title": "공백일 수 없습니다"
+      }
+    }
+  },
+  {
+    "name": "400: 제목 101자",
+    "method": "POST",
+    "url": "http://127.0.0.1:18084/books",
+    "request_body": {
+      "categoryId": 1,
+      "title": "가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가"
+    },
+    "status": 400,
+    "response": {
+      "type": "about:blank",
+      "title": "Bad Request",
+      "status": 400,
+      "detail": "요청 값을 확인해주세요.",
+      "instance": "/books",
+      "errors": {
+        "title": "크기가 0에서 100 사이여야 합니다"
+      }
+    }
+  },
+  {
+    "name": "400: 카테고리 누락",
+    "method": "POST",
+    "url": "http://127.0.0.1:18084/books",
+    "request_body": {
+      "title": "제목"
+    },
+    "status": 400,
+    "response": {
+      "type": "about:blank",
+      "title": "Bad Request",
+      "status": 400,
+      "detail": "요청 값을 확인해주세요.",
+      "instance": "/books",
+      "errors": {
+        "categoryId": "널이어서는 안됩니다"
+      }
+    }
+  },
+  {
+    "name": "400: 카테고리 null",
+    "method": "POST",
+    "url": "http://127.0.0.1:18084/books",
+    "request_body": {
+      "categoryId": null,
+      "title": "제목"
+    },
+    "status": 400,
+    "response": {
+      "type": "about:blank",
+      "title": "Bad Request",
+      "status": 400,
+      "detail": "요청 값을 확인해주세요.",
+      "instance": "/books",
+      "errors": {
+        "categoryId": "널이어서는 안됩니다"
+      }
+    }
+  },
+  {
+    "name": "400: 숫자가 아닌 카테고리",
+    "method": "POST",
+    "url": "http://127.0.0.1:18084/books",
+    "request_body": {
+      "categoryId": "abc",
+      "title": "제목"
+    },
+    "status": 400,
+    "response": {
+      "timestamp": "2026-11-01T13:27:44.342+00:00",
+      "status": 400,
+      "error": "Bad Request",
+      "path": "/books"
+    }
+  },
+  {
+    "name": "404: 존재하지 않는 카테고리",
+    "method": "POST",
+    "url": "http://127.0.0.1:18084/books",
+    "request_body": {
+      "categoryId": 999,
+      "title": "제목"
+    },
+    "status": 404,
+    "response": {
+      "type": "about:blank",
+      "title": "Not Found",
+      "status": 404,
+      "detail": "존재하지 않는 카테고리입니다.",
+      "instance": "/books"
+    }
+  }
+]

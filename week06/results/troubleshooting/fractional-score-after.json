@@ -1,0 +1,17 @@
+{
+  "name": "400 소수 별점 4.5",
+  "method": "POST",
+  "url": "http://127.0.0.1:18086/members/3/ratings",
+  "request_body": {
+    "movieId": 999,
+    "score": 4.5
+  },
+  "status": 400,
+  "response": {
+    "isSuccess": false,
+    "code": "COMMON4001",
+    "message": "요청 JSON 형식 또는 필드 타입이 올바르지 않습니다.",
+    "result": null
+  },
+  "body_bytes": 135
+}

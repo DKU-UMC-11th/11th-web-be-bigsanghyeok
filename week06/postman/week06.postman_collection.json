@@ -1,0 +1,2222 @@
+{
+  "info": {
+    "name": "Week06 회원가입·평점 CRUD 실습과 필수 미션",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:18086"
+    }
+  ],
+  "item": [
+    {
+      "name": "5주차 조회 API 유지",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/members/1/ratings"
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/members/1/ratings"
+          },
+          "code": 200,
+          "header": [],
+          "body": "[\n  {\n    \"ratingId\": 2,\n    \"movieId\": 155,\n    \"score\": 4,\n    \"comment\": \"다시 봐도 명작\",\n    \"createdAt\": \"2026-11-08T22:52:35\",\n    \"updatedAt\": \"2026-11-08T22:52:35\"\n  },\n  {\n    \"ratingId\": 1,\n    \"movieId\": 550,\n    \"score\": 5,\n    \"comment\": \"최고의 영화!\",\n    \"createdAt\": \"2026-11-08T22:52:35\",\n    \"updatedAt\": \"2026-11-08T22:52:35\"\n  }\n]"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "실습 1 회원가입 201",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"영화팬06\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"영화팬06\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 201,
+          "header": [],
+          "body": "{\n  \"isSuccess\": true,\n  \"code\": \"COMMON201\",\n  \"message\": \"회원가입에 성공했습니다.\",\n  \"result\": {\n    \"memberId\": 3,\n    \"email\": \"week06@example.com\",\n    \"nickname\": \"영화팬06\"\n  }\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(201));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "동일 테스트 비밀번호도 다른 salt 해시",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"salt06@example.com\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"영화팬두명\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"salt06@example.com\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"영화팬두명\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 201,
+          "header": [],
+          "body": "{\n  \"isSuccess\": true,\n  \"code\": \"COMMON201\",\n  \"message\": \"회원가입에 성공했습니다.\",\n  \"result\": {\n    \"memberId\": 4,\n    \"email\": \"salt06@example.com\",\n    \"nickname\": \"영화팬두명\"\n  }\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(201));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "중복 이메일 409",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"다른닉네임\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"다른닉네임\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 409,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4092\",\n  \"message\": \"이미 사용 중인 이메일입니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(409));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "중복 닉네임 409",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"other06@example.com\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"영화팬06\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"other06@example.com\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"영화팬06\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 409,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4092\",\n  \"message\": \"이미 사용 중인 닉네임입니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(409));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 이메일 형식",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"invalid\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"영화팬06\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"invalid\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"영화팬06\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"올바른 이메일 형식이 아닙니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 이메일 빈 값",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"영화팬06\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"영화팬06\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"이메일을 입력해주세요.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 닉네임 1자",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"가\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"가\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"닉네임은 2자 이상 12자 이하로 입력해주세요.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 닉네임 13자",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"가가가가가가가가가가가가가\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Movie123!\",\n  \"nickname\": \"가가가가가가가가가가가가가\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"닉네임은 2자 이상 12자 이하로 입력해주세요.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 비밀번호 대문자 누락",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"movie123!\",\n  \"nickname\": \"영화팬06\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"movie123!\",\n  \"nickname\": \"영화팬06\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"비밀번호는 대문자/소문자/숫자/특수문자를 포함한 8자 이상이어야 합니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 비밀번호 소문자 누락",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"MOVIE123!\",\n  \"nickname\": \"영화팬06\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"MOVIE123!\",\n  \"nickname\": \"영화팬06\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"비밀번호는 대문자/소문자/숫자/특수문자를 포함한 8자 이상이어야 합니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 비밀번호 숫자 누락",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Movieabc!\",\n  \"nickname\": \"영화팬06\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Movieabc!\",\n  \"nickname\": \"영화팬06\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"비밀번호는 대문자/소문자/숫자/특수문자를 포함한 8자 이상이어야 합니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 비밀번호 특수문자 누락",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Movie1234\",\n  \"nickname\": \"영화팬06\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Movie1234\",\n  \"nickname\": \"영화팬06\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"비밀번호는 대문자/소문자/숫자/특수문자를 포함한 8자 이상이어야 합니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 비밀번호 7자",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Mov123!\",\n  \"nickname\": \"영화팬06\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Mov123!\",\n  \"nickname\": \"영화팬06\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"비밀번호는 대문자/소문자/숫자/특수문자를 포함한 8자 이상이어야 합니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 bcrypt 72바이트 초과",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Movie123!가가가가가가가가가가가가가가가가가가가가가가가가\",\n  \"nickname\": \"영화팬06\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"week06@example.com\",\n  \"password\": \"Movie123!가가가가가가가가가가가가가가가가가가가가가가가가\",\n  \"nickname\": \"영화팬06\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON400\",\n  \"message\": \"비밀번호는 UTF-8 기준 72바이트 이하여야 합니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "실습 3 평점 등록 201",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/3/ratings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movieId\": 27205,\n  \"score\": 4,\n  \"comment\": \"등록 실습\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/3/ratings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieId\": 27205,\n  \"score\": 4,\n  \"comment\": \"등록 실습\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 201,
+          "header": [],
+          "body": "{\n  \"isSuccess\": true,\n  \"code\": \"COMMON201\",\n  \"message\": \"평점 등록에 성공했습니다.\",\n  \"result\": 4\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(201));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "중복 평점 409",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/3/ratings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movieId\": 27205,\n  \"score\": 3\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/3/ratings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieId\": 27205,\n  \"score\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 409,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4092\",\n  \"message\": \"이미 이 영화에 평점을 남기셨습니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(409));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 movieId 0",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/3/ratings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movieId\": 0,\n  \"score\": 3\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/3/ratings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieId\": 0,\n  \"score\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"영화 ID는 양수여야 합니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 movieId 누락",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/3/ratings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"score\": 3\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/3/ratings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"score\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"영화 ID를 입력해주세요.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 별점 0",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/3/ratings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movieId\": 999,\n  \"score\": 0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/3/ratings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieId\": 999,\n  \"score\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"별점은 1점 이상이어야 합니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 별점 6",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/3/ratings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movieId\": 999,\n  \"score\": 6\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/3/ratings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieId\": 999,\n  \"score\": 6\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"별점은 5점 이하여야 합니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 별점 누락",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/3/ratings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movieId\": 999\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/3/ratings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieId\": 999\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"별점을 입력해주세요.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 소수 별점 4.5",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/3/ratings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movieId\": 999,\n  \"score\": 4.5\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/3/ratings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieId\": 999,\n  \"score\": 4.5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"요청 JSON 형식 또는 필드 타입이 올바르지 않습니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 소수 영화 ID",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/3/ratings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movieId\": 999.5,\n  \"score\": 4\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/3/ratings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieId\": 999.5,\n  \"score\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"요청 JSON 형식 또는 필드 타입이 올바르지 않습니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "400 후기 501자",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/3/ratings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movieId\": 999,\n  \"score\": 3,\n  \"comment\": \"가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/3/ratings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieId\": 999,\n  \"score\": 3,\n  \"comment\": \"가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"후기는 500자 이하로 입력해주세요.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "없는 회원 평점 등록 404",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/999/ratings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movieId\": 999,\n  \"score\": 3\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/999/ratings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieId\": 999,\n  \"score\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 404,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON404\",\n  \"message\": \"존재하지 않는 유저입니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "수정 전 조회",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/members/3/ratings"
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/members/3/ratings"
+          },
+          "code": 200,
+          "header": [],
+          "body": "[\n  {\n    \"ratingId\": 4,\n    \"movieId\": 27205,\n    \"score\": 4,\n    \"comment\": \"등록 실습\",\n    \"createdAt\": \"2026-11-08T22:52:56\",\n    \"updatedAt\": \"2026-11-08T22:52:56\"\n  }\n]"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "타인 평점 PATCH 403",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/1/ratings/4",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"score\": 1,\n  \"comment\": \"다른 회원 요청\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/1/ratings/4",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"score\": 1,\n  \"comment\": \"다른 회원 요청\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 403,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON403\",\n  \"message\": \"본인이 작성한 평점만 수정하거나 삭제할 수 있습니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(403));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "타인 평점 DELETE 403",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/members/1/ratings/4"
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/members/1/ratings/4"
+          },
+          "code": 403,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON403\",\n  \"message\": \"본인이 작성한 평점만 수정하거나 삭제할 수 있습니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(403));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "타인 요청 후 원본 보존",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/members/3/ratings"
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/members/3/ratings"
+          },
+          "code": 200,
+          "header": [],
+          "body": "[\n  {\n    \"ratingId\": 4,\n    \"movieId\": 27205,\n    \"score\": 4,\n    \"comment\": \"등록 실습\",\n    \"createdAt\": \"2026-11-08T22:52:56\",\n    \"updatedAt\": \"2026-11-08T22:52:56\"\n  }\n]"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "평점 수정 200",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/3/ratings/4",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"score\": 5,\n  \"comment\": \"수정 실습\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/3/ratings/4",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"score\": 5,\n  \"comment\": \"수정 실습\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 200,
+          "header": [],
+          "body": "{\n  \"isSuccess\": true,\n  \"code\": \"COMMON200\",\n  \"message\": \"평점 수정에 성공했습니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "수정 후 실제 조회",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/members/3/ratings"
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/members/3/ratings"
+          },
+          "code": 200,
+          "header": [],
+          "body": "[\n  {\n    \"ratingId\": 4,\n    \"movieId\": 27205,\n    \"score\": 5,\n    \"comment\": \"수정 실습\",\n    \"createdAt\": \"2026-11-08T22:52:56\",\n    \"updatedAt\": \"2026-11-08T22:52:57\"\n  }\n]"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "수정 별점 범위 오류 400",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/3/ratings/4",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"score\": 0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/3/ratings/4",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"score\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"별점은 1점 이상이어야 합니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "평점 삭제 204 빈 Body",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/members/3/ratings/4"
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/members/3/ratings/4"
+          },
+          "code": 204,
+          "header": [],
+          "body": ""
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "삭제 후 목록 비어 있음",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/members/3/ratings"
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/members/3/ratings"
+          },
+          "code": 200,
+          "header": [],
+          "body": "[]"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "없는 평점 PATCH 404",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/3/ratings/4",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"score\": 3\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/3/ratings/4",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"score\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 404,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON404\",\n  \"message\": \"존재하지 않는 평점입니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "없는 평점 DELETE 404",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/members/3/ratings/4"
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/members/3/ratings/4"
+          },
+          "code": 404,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON404\",\n  \"message\": \"존재하지 않는 평점입니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "별점 1점 후기 500자 경계",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/3/ratings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movieId\": 999,\n  \"score\": 1,\n  \"comment\": \"가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/3/ratings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieId\": 999,\n  \"score\": 1,\n  \"comment\": \"가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 201,
+          "header": [],
+          "body": "{\n  \"isSuccess\": true,\n  \"code\": \"COMMON201\",\n  \"message\": \"평점 등록에 성공했습니다.\",\n  \"result\": 5\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(201));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "경계 데이터 정리",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/members/3/ratings/5"
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/members/3/ratings/5"
+          },
+          "code": 204,
+          "header": [],
+          "body": ""
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "숫자가 아닌 경로 ID 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members/abc/ratings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movieId\": 999,\n  \"score\": 3\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members/abc/ratings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieId\": 999,\n  \"score\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"요청 JSON 형식 또는 필드 타입이 올바르지 않습니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "잘못된 JSON도 공통 형식",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "\"{\"",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "실제 실행 결과",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "\"{\"",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"isSuccess\": false,\n  \"code\": \"COMMON4001\",\n  \"message\": \"요청 JSON 형식 또는 필드 타입이 올바르지 않습니다.\",\n  \"result\": null\n}"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected status\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

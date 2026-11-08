@@ -1,0 +1,17 @@
+{
+  "name": "400 소수 별점 4.5",
+  "method": "POST",
+  "url": "http://127.0.0.1:18086/members/3/ratings",
+  "request_body": {
+    "movieId": 999,
+    "score": 4.5
+  },
+  "status": 201,
+  "response": {
+    "isSuccess": true,
+    "code": "COMMON201",
+    "message": "평점 등록에 성공했습니다.",
+    "result": 5
+  },
+  "body_bytes": 97
+}

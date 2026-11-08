@@ -1,0 +1,618 @@
+# 6주차 핵심 코드 원문
+
+## com/umc/movie/config/PasswordConfig.java
+
+```java
+package com.umc.movie.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+@Configuration
+public class PasswordConfig {
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
+```
+
+## com/umc/movie/config/WebConfig.java
+
+```java
+package com.umc.movie.config;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    private final boolean enabled;
+    public WebConfig(@Value("${app.cors-enabled:true}") boolean enabled) { this.enabled = enabled; }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        if (enabled) {
+            registry.addMapping("/**")
+                    .allowedOrigins("http://localhost:5173")
+                    .allowedMethods("GET", "POST", "PATCH", "DELETE")
+                    .allowedHeaders("*");
+        }
+    }
+}
+```
+
+## com/umc/movie/controller/GlobalExceptionHandler.java
+
+```java
+package com.umc.movie.controller;
+
+import com.umc.movie.dto.ApiResponse;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.server.ResponseStatusException;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<Void>> validation(MethodArgumentNotValidException exception) {
+        String message = exception.getBindingResult().getFieldErrors().getFirst().getDefaultMessage();
+        return ResponseEntity.badRequest().body(ApiResponse.failure("COMMON4001", message));
+    }
+
+    @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<ApiResponse<Void>> malformedRequest(Exception exception) {
+        return ResponseEntity.badRequest().body(ApiResponse.failure(
+                "COMMON4001", "요청 JSON 형식 또는 필드 타입이 올바르지 않습니다."));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<Void>> dataIntegrity(DataIntegrityViolationException exception) {
+        return ResponseEntity.status(409).body(ApiResponse.failure("COMMON4091", "이미 존재하는 데이터입니다."));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Void>> conflict(IllegalArgumentException exception) {
+        return ResponseEntity.status(409).body(ApiResponse.failure("COMMON4092", exception.getMessage()));
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ApiResponse<Void>> responseStatus(ResponseStatusException exception) {
+        int status = exception.getStatusCode().value();
+        return ResponseEntity.status(status).body(ApiResponse.failure("COMMON" + status, exception.getReason()));
+    }
+}
+```
+
+## com/umc/movie/controller/MemberController.java
+
+```java
+package com.umc.movie.controller;
+
+import com.umc.movie.dto.EmailCheckResponse;
+import com.umc.movie.dto.ApiResponse;
+import com.umc.movie.dto.MemberResponse;
+import com.umc.movie.dto.SignUpRequest;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import com.umc.movie.dto.NicknameCheckResponse;
+import com.umc.movie.service.MemberService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/members")
+public class MemberController {
+
+    private final MemberService memberService;
+
+    @PostMapping
+    public ResponseEntity<ApiResponse<MemberResponse>> signUp(@Valid @RequestBody SignUpRequest request) {
+        return ResponseEntity.status(201).body(ApiResponse.created("회원가입에 성공했습니다.", memberService.signUp(request)));
+    }
+
+    @GetMapping("/nickname/{nickname}")
+    public NicknameCheckResponse checkNickname(@PathVariable("nickname") String nickname) {
+        return memberService.checkNickname(nickname);
+    }
+
+    @GetMapping("/email/{email}")
+    public EmailCheckResponse checkEmail(@PathVariable("email") String email) {
+        return memberService.checkEmail(email);
+    }
+}
+```
+
+## com/umc/movie/controller/RatingController.java
+
+```java
+package com.umc.movie.controller;
+
+import com.umc.movie.dto.RatingResponse;
+import com.umc.movie.dto.ApiResponse;
+import com.umc.movie.dto.CreateRatingRequest;
+import com.umc.movie.dto.UpdateRatingRequest;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import com.umc.movie.service.RatingService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/members")
+public class RatingController {
+
+    private final RatingService ratingService;
+
+    @PostMapping("/{memberId}/ratings")
+    public ResponseEntity<ApiResponse<Long>> create(@PathVariable("memberId") Long memberId,
+            @Valid @RequestBody CreateRatingRequest request) {
+        return ResponseEntity.status(201).body(ApiResponse.created("평점 등록에 성공했습니다.", ratingService.create(memberId, request)));
+    }
+
+    @PatchMapping("/{memberId}/ratings/{ratingId}")
+    public ResponseEntity<ApiResponse<Void>> update(@PathVariable("memberId") Long memberId,
+            @PathVariable("ratingId") Long ratingId, @Valid @RequestBody UpdateRatingRequest request) {
+        ratingService.update(ratingId, memberId, request);
+        return ResponseEntity.ok(ApiResponse.ok("평점 수정에 성공했습니다.", null));
+    }
+
+    @DeleteMapping("/{memberId}/ratings/{ratingId}")
+    public ResponseEntity<Void> delete(@PathVariable("memberId") Long memberId, @PathVariable("ratingId") Long ratingId) {
+        ratingService.delete(ratingId, memberId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{memberId}/ratings")
+    public List<RatingResponse> getMemberRatings(@PathVariable("memberId") Long memberId) {
+        return ratingService.getRatingsByMember(memberId);
+    }
+}
+```
+
+## com/umc/movie/dto/ApiResponse.java
+
+```java
+package com.umc.movie.dto;
+
+public record ApiResponse<T>(boolean isSuccess, String code, String message, T result) {
+    public static <T> ApiResponse<T> created(String message, T result) {
+        return new ApiResponse<>(true, "COMMON201", message, result);
+    }
+
+    public static <T> ApiResponse<T> ok(String message, T result) {
+        return new ApiResponse<>(true, "COMMON200", message, result);
+    }
+
+    public static ApiResponse<Void> failure(String code, String message) {
+        return new ApiResponse<>(false, code, message, null);
+    }
+}
+```
+
+## com/umc/movie/dto/CreateRatingRequest.java
+
+```java
+package com.umc.movie.dto;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+
+public record CreateRatingRequest(
+        @NotNull(message = "영화 ID를 입력해주세요.")
+        @Positive(message = "영화 ID는 양수여야 합니다.") Long movieId,
+        @NotNull(message = "별점을 입력해주세요.")
+        @Min(value = 1, message = "별점은 1점 이상이어야 합니다.")
+        @Max(value = 5, message = "별점은 5점 이하여야 합니다.") Integer score,
+        @Size(max = 500, message = "후기는 500자 이하로 입력해주세요.") String comment
+) {}
+```
+
+## com/umc/movie/dto/EmailCheckResponse.java
+
+```java
+package com.umc.movie.dto;
+
+public record EmailCheckResponse(boolean available) {}
+```
+
+## com/umc/movie/dto/MemberResponse.java
+
+```java
+package com.umc.movie.dto;
+
+public record MemberResponse(Long memberId, String email, String nickname) {}
+```
+
+## com/umc/movie/dto/NicknameCheckResponse.java
+
+```java
+package com.umc.movie.dto;
+
+public record NicknameCheckResponse(boolean available) {}
+```
+
+## com/umc/movie/dto/RatingResponse.java
+
+```java
+package com.umc.movie.dto;
+
+import com.umc.movie.entity.Rating;
+
+import java.time.LocalDateTime;
+
+public record RatingResponse(
+        Long ratingId,
+        Long movieId,
+        Integer score,
+        String comment,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
+) {
+    public static RatingResponse from(Rating rating) {
+        return new RatingResponse(
+                rating.getRatingId(),
+                rating.getMovieId(),
+                rating.getScore(),
+                rating.getComment(),
+                rating.getCreatedAt(),
+                rating.getUpdatedAt()
+        );
+    }
+}
+```
+
+## com/umc/movie/dto/SignUpRequest.java
+
+```java
+package com.umc.movie.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
+public record SignUpRequest(
+        @NotBlank(message = "이메일을 입력해주세요.")
+        @Email(message = "올바른 이메일 형식이 아닙니다.")
+        @Size(max = 254, message = "이메일은 254자 이하로 입력해주세요.")
+        String email,
+        @NotBlank(message = "비밀번호를 입력해주세요.")
+        @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*]).{8,}$",
+                message = "비밀번호는 대문자/소문자/숫자/특수문자를 포함한 8자 이상이어야 합니다.")
+        String password,
+        @NotBlank(message = "닉네임을 입력해주세요.")
+        @Size(min = 2, max = 12, message = "닉네임은 2자 이상 12자 이하로 입력해주세요.")
+        String nickname
+) {}
+```
+
+## com/umc/movie/dto/UpdateRatingRequest.java
+
+```java
+package com.umc.movie.dto;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+public record UpdateRatingRequest(
+        @NotNull(message = "별점을 입력해주세요.")
+        @Min(value = 1, message = "별점은 1점 이상이어야 합니다.")
+        @Max(value = 5, message = "별점은 5점 이하여야 합니다.") Integer score,
+        @Size(max = 500, message = "후기는 500자 이하로 입력해주세요.") String comment
+) {}
+```
+
+## com/umc/movie/entity/BaseTimeEntity.java
+
+```java
+package com.umc.movie.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+
+@Getter
+@MappedSuperclass
+public abstract class BaseTimeEntity {
+
+    // 처음 저장될 때 Hibernate가 자동으로 채워줍니다. 이후에는 절대 바뀌지 않습니다.
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "DATETIME")
+    private LocalDateTime createdAt;
+
+    // 이 엔티티가 저장될 때마다 Hibernate가 현재 시각으로 자동 갱신합니다.
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false, columnDefinition = "DATETIME")
+    private LocalDateTime updatedAt;
+}
+```
+
+## com/umc/movie/entity/Member.java
+
+```java
+package com.umc.movie.entity;
+
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "member")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Member extends BaseTimeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
+    private Long memberId;
+
+    @Column(nullable = false, unique = true, length = 254)
+    private String email;
+
+    @Column(nullable = false, length = 60)
+    private String password;
+
+    @Column(nullable = false, unique = true, length = 50)
+    private String nickname;
+
+    public Member(String email, String password, String nickname) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+    }
+}
+```
+
+## com/umc/movie/entity/Rating.java
+
+```java
+package com.umc.movie.entity;
+
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "rating", uniqueConstraints = @UniqueConstraint(columnNames = {"member_id", "movie_id"}))
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Rating extends BaseTimeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "rating_id")
+    private Long ratingId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    @Column(name = "movie_id", nullable = false)
+    private Long movieId;
+
+    @Column(nullable = false, columnDefinition = "TINYINT")
+    private Integer score;
+
+    @Column(columnDefinition = "TEXT")
+    private String comment;
+
+    @Builder
+    public Rating(Member member, Long movieId, Integer score, String comment) {
+        this.member = member;
+        this.movieId = movieId;
+        this.score = score;
+        this.comment = comment;
+    }
+
+    public void update(Integer score, String comment) {
+        this.score = score;
+        this.comment = comment;
+    }
+}
+```
+
+## com/umc/movie/MovieApplication.java
+
+```java
+package com.umc.movie;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class MovieApplication {
+    public static void main(String[] args) { SpringApplication.run(MovieApplication.class, args); }
+}
+```
+
+## com/umc/movie/repository/MemberRepository.java
+
+```java
+package com.umc.movie.repository;
+
+import com.umc.movie.entity.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    boolean existsByNickname(String nickname);
+    boolean existsByEmail(String email);
+}
+```
+
+## com/umc/movie/repository/RatingRepository.java
+
+```java
+package com.umc.movie.repository;
+
+import com.umc.movie.entity.Rating;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface RatingRepository extends JpaRepository<Rating, Long> {
+    List<Rating> findByMember_MemberIdOrderByRatingIdDesc(Long memberId);
+    boolean existsByMember_MemberIdAndMovieId(Long memberId, Long movieId);
+}
+```
+
+## com/umc/movie/service/MemberService.java
+
+```java
+package com.umc.movie.service;
+
+import com.umc.movie.dto.EmailCheckResponse;
+import com.umc.movie.dto.MemberResponse;
+import com.umc.movie.dto.SignUpRequest;
+import com.umc.movie.entity.Member;
+import com.umc.movie.dto.NicknameCheckResponse;
+import com.umc.movie.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.nio.charset.StandardCharsets;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.server.ResponseStatusException;
+
+@Service
+@RequiredArgsConstructor
+public class MemberService {
+
+    private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Transactional
+    public MemberResponse signUp(SignUpRequest request) {
+        if (request.password().getBytes(StandardCharsets.UTF_8).length > 72) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호는 UTF-8 기준 72바이트 이하여야 합니다.");
+        }
+        if (memberRepository.existsByEmail(request.email())) {
+            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+        }
+        if (memberRepository.existsByNickname(request.nickname())) {
+            throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
+        }
+        Member saved = memberRepository.save(new Member(request.email(),
+                passwordEncoder.encode(request.password()), request.nickname()));
+        return new MemberResponse(saved.getMemberId(), saved.getEmail(), saved.getNickname());
+    }
+
+    @Transactional(readOnly = true)
+    public NicknameCheckResponse checkNickname(String nickname) {
+        boolean exists = memberRepository.existsByNickname(nickname);
+        return new NicknameCheckResponse(!exists);
+    }
+
+    @Transactional(readOnly = true)
+    public EmailCheckResponse checkEmail(String email) {
+        boolean exists = memberRepository.existsByEmail(email);
+        return new EmailCheckResponse(!exists);
+    }
+}
+```
+
+## com/umc/movie/service/RatingService.java
+
+```java
+package com.umc.movie.service;
+
+import com.umc.movie.dto.RatingResponse;
+import com.umc.movie.dto.CreateRatingRequest;
+import com.umc.movie.dto.UpdateRatingRequest;
+import com.umc.movie.entity.Member;
+import com.umc.movie.entity.Rating;
+import com.umc.movie.repository.RatingRepository;
+import com.umc.movie.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class RatingService {
+
+    private final RatingRepository ratingRepository;
+    private final MemberRepository memberRepository;
+
+    @Transactional
+    public Long create(Long memberId, CreateRatingRequest request) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다."));
+        if (ratingRepository.existsByMember_MemberIdAndMovieId(memberId, request.movieId())) {
+            throw new IllegalArgumentException("이미 이 영화에 평점을 남기셨습니다.");
+        }
+        Rating rating = Rating.builder().member(member).movieId(request.movieId())
+                .score(request.score()).comment(request.comment()).build();
+        return ratingRepository.save(rating).getRatingId();
+    }
+
+    @Transactional
+    public void update(Long ratingId, Long memberId, UpdateRatingRequest request) {
+        Rating rating = findOwnedRating(ratingId, memberId);
+        rating.update(request.score(), request.comment());
+    }
+
+    @Transactional
+    public void delete(Long ratingId, Long memberId) {
+        ratingRepository.delete(findOwnedRating(ratingId, memberId));
+    }
+
+    private Rating findOwnedRating(Long ratingId, Long memberId) {
+        Rating rating = ratingRepository.findById(ratingId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 평점입니다."));
+        if (!rating.getMember().getMemberId().equals(memberId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "본인이 작성한 평점만 수정하거나 삭제할 수 있습니다.");
+        }
+        return rating;
+    }
+
+    @Transactional(readOnly = true)
+    public List<RatingResponse> getRatingsByMember(Long memberId) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다.");
+        }
+
+        return ratingRepository.findByMember_MemberIdOrderByRatingIdDesc(memberId).stream()
+                .map(RatingResponse::from)
+                .toList();
+    }
+}
+```

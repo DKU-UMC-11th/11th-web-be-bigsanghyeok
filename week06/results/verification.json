@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "http_cases": 41,
+  "mysql_version": "26.7.0",
+  "executed_at": "2026-11-08T22:52:56.961021+09:00",
+  "password_bcrypt_matches": true,
+  "stored_hash_length": 60,
+  "salt_hashes_differ": true,
+  "password_not_in_signup_response": true,
+  "duplicate_rating_not_inserted": true,
+  "ownership_forbidden_and_unchanged": true,
+  "delete_204_empty_body": true,
+  "fixture_sha256": {
+    "01_schema.sql": "aef93b124a29be738a0771e592ecc84cc632a8bc00fdf361aa39742d62e7c44b",
+    "02_seed.sql": "f7c83f70e822e5ca741ee6440a02403cbb9b7c60d851c8805876fafc3a792744"
+  }
+}

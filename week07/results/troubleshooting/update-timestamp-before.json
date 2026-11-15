@@ -1,0 +1,17 @@
+{
+  "step": "5 본인 수정",
+  "status": 200,
+  "response": {
+    "isSuccess": true,
+    "code": "COMMON200",
+    "message": "평점을 수정했습니다.",
+    "result": {
+      "ratingId": 6,
+      "movieId": 27205,
+      "score": 5,
+      "comment": "본인 수정 완료",
+      "createdAt": "2026-11-15T23:34:24",
+      "updatedAt": "2026-11-15T23:34:24"
+    }
+  }
+}

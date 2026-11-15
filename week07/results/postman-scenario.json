@@ -1,0 +1,236 @@
+{
+  "memberA": 5,
+  "memberB": 6,
+  "ratingId": 6,
+  "requests": [
+    {
+      "step": "1 A 회원가입",
+      "status": 201,
+      "response": {
+        "isSuccess": true,
+        "code": "COMMON201",
+        "message": "회원가입에 성공했습니다.",
+        "result": {
+          "memberId": 5,
+          "email": "a.postman@umc.com",
+          "nickname": "실습회원A"
+        }
+      }
+    },
+    {
+      "step": "1 B 회원가입",
+      "status": 201,
+      "response": {
+        "isSuccess": true,
+        "code": "COMMON201",
+        "message": "회원가입에 성공했습니다.",
+        "result": {
+          "memberId": 6,
+          "email": "b.postman@umc.com",
+          "nickname": "실습회원B"
+        }
+      }
+    },
+    {
+      "step": "2 A 로그인",
+      "status": 200,
+      "response": {
+        "isSuccess": true,
+        "code": "COMMON200",
+        "message": "로그인에 성공했습니다.",
+        "result": {
+          "nickname": "실습회원A",
+          "accessToken": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiZW1haWwiOiJhLnBvc3RtYW5AdW1jLmNvbSIsImlhdCI6MTc5NDc1MzE3MiwiZXhwIjoxNzk0NzU2NzcyfQ.o-tehA89PJy3Pw-sGPBpGbd3UBxQalViHVFujT5RV8Ngy5xe5gYAXOmsuKp8rJcHHAWkADLyRf-kHgScS77UBg"
+        }
+      }
+    },
+    {
+      "step": "2 B 로그인",
+      "status": 200,
+      "response": {
+        "isSuccess": true,
+        "code": "COMMON200",
+        "message": "로그인에 성공했습니다.",
+        "result": {
+          "nickname": "실습회원B",
+          "accessToken": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiZW1haWwiOiJiLnBvc3RtYW5AdW1jLmNvbSIsImlhdCI6MTc5NDc1MzIwNCwiZXhwIjoxNzk0NzU2ODA0fQ.iFmeL1J_yur2I9b6dGHWcKw_GyHWLc9Ey10bQbD945Bi2aOmJ1EmgOSnecieso-S-oMVk78cvgZ5s14O4z6dEg"
+        }
+      }
+    },
+    {
+      "step": "3 본인 등록",
+      "status": 201,
+      "response": {
+        "isSuccess": true,
+        "code": "COMMON201",
+        "message": "평점을 등록했습니다.",
+        "result": {
+          "ratingId": 6,
+          "movieId": 27205,
+          "score": 4,
+          "comment": "내 토큰으로 등록",
+          "createdAt": "2026-11-15T23:34:23.699769",
+          "updatedAt": "2026-11-15T23:34:23.699769"
+        }
+      }
+    },
+    {
+      "step": "4 중복 등록",
+      "status": 409,
+      "response": {
+        "isSuccess": false,
+        "code": "RATING409_1",
+        "message": "이미 이 영화에 평점을 남기셨습니다.",
+        "result": null
+      }
+    },
+    {
+      "step": "5 본인 수정",
+      "status": 200,
+      "response": {
+        "isSuccess": true,
+        "code": "COMMON200",
+        "message": "평점을 수정했습니다.",
+        "result": {
+          "ratingId": 6,
+          "movieId": 27205,
+          "score": 5,
+          "comment": "본인 수정 완료",
+          "createdAt": "2026-11-15T23:34:24",
+          "updatedAt": "2026-11-15T23:34:24"
+        }
+      }
+    },
+    {
+      "step": "6 B 토큰으로 남의 평점 수정",
+      "status": 403,
+      "response": {
+        "isSuccess": false,
+        "code": "RATING403_1",
+        "message": "본인이 작성한 평점만 수정하거나 삭제할 수 있습니다.",
+        "result": null
+      }
+    },
+    {
+      "step": "7 토큰 없이 수정",
+      "status": 401,
+      "response": {
+        "isSuccess": false,
+        "code": "AUTH401_2",
+        "message": "로그인이 필요한 요청입니다.",
+        "result": null
+      }
+    },
+    {
+      "step": "8 없는 평점 삭제",
+      "status": 404,
+      "response": {
+        "isSuccess": false,
+        "code": "RATING404_1",
+        "message": "해당 평점을 찾을 수 없습니다.",
+        "result": null
+      }
+    },
+    {
+      "step": "9 본인 삭제",
+      "status": 200,
+      "response": {
+        "isSuccess": true,
+        "code": "COMMON200",
+        "message": "평점을 삭제했습니다.",
+        "result": null
+      }
+    },
+    {
+      "step": "실습3 토큰 없이 내 정보",
+      "status": 401,
+      "response": {
+        "isSuccess": false,
+        "code": "AUTH401_2",
+        "message": "로그인이 필요한 요청입니다.",
+        "result": null
+      }
+    },
+    {
+      "step": "실습3 내 정보 정상 조회",
+      "status": 200,
+      "response": {
+        "isSuccess": true,
+        "code": "COMMON200",
+        "message": "회원 정보를 조회했습니다.",
+        "result": {
+          "email": "a.postman@umc.com",
+          "nickname": "실습회원A",
+          "createdAt": "2026-11-15T23:32:00"
+        }
+      }
+    },
+    {
+      "step": "실습3 payload 한 글자 변조",
+      "status": 401,
+      "response": {
+        "isSuccess": false,
+        "code": "AUTH401_3",
+        "message": "유효하지 않은 토큰입니다.",
+        "result": null
+      }
+    },
+    {
+      "step": "실습4 내 닉네임 수정",
+      "status": 200,
+      "response": {
+        "isSuccess": true,
+        "code": "COMMON200",
+        "message": "회원 정보를 수정했습니다.",
+        "result": {
+          "email": "a.postman@umc.com",
+          "nickname": "칠주차영화팬",
+          "createdAt": "2026-11-15T23:32:00"
+        }
+      }
+    },
+    {
+      "step": "실습4 타인 닉네임 중복",
+      "status": 409,
+      "response": {
+        "isSuccess": false,
+        "code": "MEMBER409_1",
+        "message": "이미 사용 중인 닉네임입니다.",
+        "result": null
+      }
+    },
+    {
+      "step": "실습1 틀린 비밀번호",
+      "status": 401,
+      "response": {
+        "isSuccess": false,
+        "code": "AUTH401_1",
+        "message": "이메일 또는 비밀번호가 올바르지 않습니다.",
+        "result": null
+      }
+    },
+    {
+      "step": "실습1 없는 이메일",
+      "status": 401,
+      "response": {
+        "isSuccess": false,
+        "code": "AUTH401_1",
+        "message": "이메일 또는 비밀번호가 올바르지 않습니다.",
+        "result": null
+      }
+    },
+    {
+      "step": "추가 A 재로그인",
+      "status": 200,
+      "response": {
+        "isSuccess": true,
+        "code": "COMMON200",
+        "message": "로그인에 성공했습니다.",
+        "result": {
+          "nickname": "칠주차영화팬",
+          "accessToken": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiZW1haWwiOiJhLnBvc3RtYW5AdW1jLmNvbSIsImlhdCI6MTc5NDc1MzYzNSwiZXhwIjoxNzk0NzU3MjM1fQ.YBtaQuIimZhZYFN8afqZy-aEp1GbMQ6guoV8alhC2wO14Metn63nDaDccNFiTDgBqGiyVTnsUc1a5OmW2yEzRg"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,918 @@
+[
+  {
+    "name": "시나리오 1 A 회원가입",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/members",
+    "request_body": {
+      "email": "a@umc.com",
+      "password": "Movie123!",
+      "nickname": "영화팬A"
+    },
+    "authenticated": false,
+    "status": 201,
+    "response": {
+      "isSuccess": true,
+      "code": "COMMON201",
+      "message": "회원가입에 성공했습니다.",
+      "result": {
+        "memberId": 3,
+        "email": "a@umc.com",
+        "nickname": "영화팬A"
+      }
+    },
+    "body_bytes": 153
+  },
+  {
+    "name": "시나리오 1 B 회원가입",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/members",
+    "request_body": {
+      "email": "b@umc.com",
+      "password": "Movie123!",
+      "nickname": "영화팬B"
+    },
+    "authenticated": false,
+    "status": 201,
+    "response": {
+      "isSuccess": true,
+      "code": "COMMON201",
+      "message": "회원가입에 성공했습니다.",
+      "result": {
+        "memberId": 4,
+        "email": "b@umc.com",
+        "nickname": "영화팬B"
+      }
+    },
+    "body_bytes": 153
+  },
+  {
+    "name": "시나리오 2 A 로그인",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/auth/login",
+    "request_body": {
+      "email": "a@umc.com",
+      "password": "Movie123!"
+    },
+    "authenticated": false,
+    "status": 200,
+    "response": {
+      "isSuccess": true,
+      "code": "COMMON200",
+      "message": "로그인에 성공했습니다.",
+      "result": {
+        "nickname": "영화팬A",
+        "accessToken": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiZW1haWwiOiJhQHVtYy5jb20iLCJpYXQiOjE3OTQ3NTQwOTMsImV4cCI6MTc5NDc1NzY5M30.O8mfeiSa1cYaqHBjao5QHeB7vRYqUOkSwP7Bacaxaroj4qvY9qRYCTR4m7sPFyHyTK4icucHQ-j61nfhWdt-BQ"
+      }
+    },
+    "body_bytes": 329
+  },
+  {
+    "name": "시나리오 2 B 로그인",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/auth/login",
+    "request_body": {
+      "email": "b@umc.com",
+      "password": "Movie123!"
+    },
+    "authenticated": false,
+    "status": 200,
+    "response": {
+      "isSuccess": true,
+      "code": "COMMON200",
+      "message": "로그인에 성공했습니다.",
+      "result": {
+        "nickname": "영화팬B",
+        "accessToken": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJiQHVtYy5jb20iLCJpYXQiOjE3OTQ3NTQwOTQsImV4cCI6MTc5NDc1NzY5NH0.6uM-sZClMyBJ1g_45XYQZtZ-o-EftxVnR3EqYg5-ujFMrDUiZWBt39zFdZOQE2VABdz0QiHYoUP2G1uINMfr-w"
+      }
+    },
+    "body_bytes": 329
+  },
+  {
+    "name": "시나리오 3 본인 평점 등록",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/ratings",
+    "request_body": {
+      "movieId": 27205,
+      "score": 4,
+      "comment": "토큰으로 등록한 평점"
+    },
+    "authenticated": true,
+    "status": 201,
+    "response": {
+      "isSuccess": true,
+      "code": "COMMON201",
+      "message": "평점을 등록했습니다.",
+      "result": {
+        "ratingId": 4,
+        "movieId": 27205,
+        "score": 4,
+        "comment": "토큰으로 등록한 평점",
+        "createdAt": "2026-11-15T23:48:14.282976",
+        "updatedAt": "2026-11-15T23:48:14.282976"
+      }
+    },
+    "body_bytes": 253
+  },
+  {
+    "name": "시나리오 4 중복 평점",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/ratings",
+    "request_body": {
+      "movieId": 27205,
+      "score": 4,
+      "comment": "토큰으로 등록한 평점"
+    },
+    "authenticated": true,
+    "status": 409,
+    "response": {
+      "isSuccess": false,
+      "code": "RATING409_1",
+      "message": "이미 이 영화에 평점을 남기셨습니다.",
+      "result": null
+    },
+    "body_bytes": 117
+  },
+  {
+    "name": "시나리오 5 본인 수정",
+    "method": "PATCH",
+    "url": "http://127.0.0.1:18087/ratings/4",
+    "request_body": {
+      "score": 5,
+      "comment": "내 토큰으로 수정 완료"
+    },
+    "authenticated": true,
+    "status": 200,
+    "response": {
+      "isSuccess": true,
+      "code": "COMMON200",
+      "message": "평점을 수정했습니다.",
+      "result": {
+        "ratingId": 4,
+        "movieId": 27205,
+        "score": 5,
+        "comment": "내 토큰으로 수정 완료",
+        "createdAt": "2026-11-15T23:48:14",
+        "updatedAt": "2026-11-15T23:48:15.672467"
+      }
+    },
+    "body_bytes": 247
+  },
+  {
+    "name": "시나리오 6 남의 평점 수정",
+    "method": "PATCH",
+    "url": "http://127.0.0.1:18087/ratings/4",
+    "request_body": {
+      "score": 5,
+      "comment": "내 토큰으로 수정 완료"
+    },
+    "authenticated": true,
+    "status": 403,
+    "response": {
+      "isSuccess": false,
+      "code": "RATING403_1",
+      "message": "본인이 작성한 평점만 수정하거나 삭제할 수 있습니다.",
+      "result": null
+    },
+    "body_bytes": 140
+  },
+  {
+    "name": "시나리오 7 토큰 없이 수정",
+    "method": "PATCH",
+    "url": "http://127.0.0.1:18087/ratings/4",
+    "request_body": {
+      "score": 5,
+      "comment": "내 토큰으로 수정 완료"
+    },
+    "authenticated": false,
+    "status": 401,
+    "response": {
+      "isSuccess": false,
+      "code": "AUTH401_2",
+      "message": "로그인이 필요한 요청입니다.",
+      "result": null
+    },
+    "body_bytes": 104
+  },
+  {
+    "name": "시나리오 8 없는 평점 삭제",
+    "method": "DELETE",
+    "url": "http://127.0.0.1:18087/ratings/99999",
+    "request_body": null,
+    "authenticated": true,
+    "status": 404,
+    "response": {
+      "isSuccess": false,
+      "code": "RATING404_1",
+      "message": "해당 평점을 찾을 수 없습니다.",
+      "result": null
+    },
+    "body_bytes": 108
+  },
+  {
+    "name": "시나리오 9 본인 삭제",
+    "method": "DELETE",
+    "url": "http://127.0.0.1:18087/ratings/4",
+    "request_body": null,
+    "authenticated": true,
+    "status": 200,
+    "response": {
+      "isSuccess": true,
+      "code": "COMMON200",
+      "message": "평점을 삭제했습니다.",
+      "result": null
+    },
+    "body_bytes": 93
+  },
+  {
+    "name": "삭제 후 공개 목록",
+    "method": "GET",
+    "url": "http://127.0.0.1:18087/members/3/ratings",
+    "request_body": null,
+    "authenticated": false,
+    "status": 200,
+    "response": [],
+    "body_bytes": 2
+  },
+  {
+    "name": "틀린 비밀번호",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/auth/login",
+    "request_body": {
+      "email": "a@umc.com",
+      "password": "wrong"
+    },
+    "authenticated": false,
+    "status": 401,
+    "response": {
+      "isSuccess": false,
+      "code": "AUTH401_1",
+      "message": "이메일 또는 비밀번호가 올바르지 않습니다.",
+      "result": null
+    },
+    "body_bytes": 124
+  },
+  {
+    "name": "없는 이메일",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/auth/login",
+    "request_body": {
+      "email": "none@umc.com",
+      "password": "Movie123!"
+    },
+    "authenticated": false,
+    "status": 401,
+    "response": {
+      "isSuccess": false,
+      "code": "AUTH401_1",
+      "message": "이메일 또는 비밀번호가 올바르지 않습니다.",
+      "result": null
+    },
+    "body_bytes": 124
+  },
+  {
+    "name": "로그인 검증 빈 비밀번호",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/auth/login",
+    "request_body": {
+      "email": "a@umc.com",
+      "password": ""
+    },
+    "authenticated": false,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "비밀번호를 입력해주세요.",
+      "result": null
+    },
+    "body_bytes": 101
+  },
+  {
+    "name": "로그인 검증 이메일 형식",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/auth/login",
+    "request_body": {
+      "email": "invalid",
+      "password": "Movie123!"
+    },
+    "authenticated": false,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "이메일 형식이 올바르지 않습니다.",
+      "result": null
+    },
+    "body_bytes": 112
+  },
+  {
+    "name": "로그인 검증 누락",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/auth/login",
+    "request_body": {},
+    "authenticated": false,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "이메일을 입력해주세요.",
+      "result": null
+    },
+    "body_bytes": 98
+  },
+  {
+    "name": "토큰 없이 내 정보",
+    "method": "GET",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": null,
+    "authenticated": false,
+    "status": 401,
+    "response": {
+      "isSuccess": false,
+      "code": "AUTH401_2",
+      "message": "로그인이 필요한 요청입니다.",
+      "result": null
+    },
+    "body_bytes": 104
+  },
+  {
+    "name": "토큰으로 내 정보",
+    "method": "GET",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": null,
+    "authenticated": true,
+    "status": 200,
+    "response": {
+      "isSuccess": true,
+      "code": "COMMON200",
+      "message": "회원 정보를 조회했습니다.",
+      "result": {
+        "email": "a@umc.com",
+        "nickname": "영화팬A",
+        "createdAt": "2026-11-15T23:48:14"
+      }
+    },
+    "body_bytes": 175
+  },
+  {
+    "name": "B 본인 정보 분리",
+    "method": "GET",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": null,
+    "authenticated": true,
+    "status": 200,
+    "response": {
+      "isSuccess": true,
+      "code": "COMMON200",
+      "message": "회원 정보를 조회했습니다.",
+      "result": {
+        "email": "b@umc.com",
+        "nickname": "영화팬B",
+        "createdAt": "2026-11-15T23:48:14"
+      }
+    },
+    "body_bytes": 175
+  },
+  {
+    "name": "payload 한 글자 변조",
+    "method": "GET",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": null,
+    "authenticated": true,
+    "status": 401,
+    "response": {
+      "isSuccess": false,
+      "code": "AUTH401_3",
+      "message": "유효하지 않은 토큰입니다.",
+      "result": null
+    },
+    "body_bytes": 101
+  },
+  {
+    "name": "깨진 토큰",
+    "method": "GET",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": null,
+    "authenticated": true,
+    "status": 401,
+    "response": {
+      "isSuccess": false,
+      "code": "AUTH401_3",
+      "message": "유효하지 않은 토큰입니다.",
+      "result": null
+    },
+    "body_bytes": 101
+  },
+  {
+    "name": "Bearer 형식 누락 Basic abc",
+    "method": "GET",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": null,
+    "authenticated": false,
+    "status": 401,
+    "response": {
+      "isSuccess": false,
+      "code": "AUTH401_2",
+      "message": "로그인이 필요한 요청입니다.",
+      "result": null
+    },
+    "body_bytes": 104
+  },
+  {
+    "name": "Bearer 형식 누락 Bearer",
+    "method": "GET",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": null,
+    "authenticated": false,
+    "status": 401,
+    "response": {
+      "isSuccess": false,
+      "code": "AUTH401_2",
+      "message": "로그인이 필요한 요청입니다.",
+      "result": null
+    },
+    "body_bytes": 104
+  },
+  {
+    "name": "Bearer 형식 누락 ",
+    "method": "GET",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": null,
+    "authenticated": false,
+    "status": 401,
+    "response": {
+      "isSuccess": false,
+      "code": "AUTH401_2",
+      "message": "로그인이 필요한 요청입니다.",
+      "result": null
+    },
+    "body_bytes": 104
+  },
+  {
+    "name": "내 닉네임 수정",
+    "method": "PATCH",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": {
+      "nickname": "영화팬칠주"
+    },
+    "authenticated": true,
+    "status": 200,
+    "response": {
+      "isSuccess": true,
+      "code": "COMMON200",
+      "message": "회원 정보를 수정했습니다.",
+      "result": {
+        "email": "a@umc.com",
+        "nickname": "영화팬칠주",
+        "createdAt": "2026-11-15T23:48:14"
+      }
+    },
+    "body_bytes": 180
+  },
+  {
+    "name": "닉네임 수정 재조회",
+    "method": "GET",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": null,
+    "authenticated": true,
+    "status": 200,
+    "response": {
+      "isSuccess": true,
+      "code": "COMMON200",
+      "message": "회원 정보를 조회했습니다.",
+      "result": {
+        "email": "a@umc.com",
+        "nickname": "영화팬칠주",
+        "createdAt": "2026-11-15T23:48:14"
+      }
+    },
+    "body_bytes": 180
+  },
+  {
+    "name": "본인 닉네임 유지 허용",
+    "method": "PATCH",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": {
+      "nickname": "영화팬칠주"
+    },
+    "authenticated": true,
+    "status": 200,
+    "response": {
+      "isSuccess": true,
+      "code": "COMMON200",
+      "message": "회원 정보를 수정했습니다.",
+      "result": {
+        "email": "a@umc.com",
+        "nickname": "영화팬칠주",
+        "createdAt": "2026-11-15T23:48:14"
+      }
+    },
+    "body_bytes": 180
+  },
+  {
+    "name": "다른 회원 닉네임 중복",
+    "method": "PATCH",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": {
+      "nickname": "영화팬B"
+    },
+    "authenticated": true,
+    "status": 409,
+    "response": {
+      "isSuccess": false,
+      "code": "MEMBER409_1",
+      "message": "이미 사용 중인 닉네임입니다.",
+      "result": null
+    },
+    "body_bytes": 107
+  },
+  {
+    "name": "닉네임 검증 ",
+    "method": "PATCH",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": {
+      "nickname": ""
+    },
+    "authenticated": true,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "닉네임을 입력해주세요.",
+      "result": null
+    },
+    "body_bytes": 98
+  },
+  {
+    "name": "닉네임 검증 가",
+    "method": "PATCH",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": {
+      "nickname": "가"
+    },
+    "authenticated": true,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "닉네임은 2자 이상 12자 이하여야 합니다.",
+      "result": null
+    },
+    "body_bytes": 120
+  },
+  {
+    "name": "닉네임 검증 가가가가가가가가가가가가가",
+    "method": "PATCH",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": {
+      "nickname": "가가가가가가가가가가가가가"
+    },
+    "authenticated": true,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "닉네임은 2자 이상 12자 이하여야 합니다.",
+      "result": null
+    },
+    "body_bytes": 120
+  },
+  {
+    "name": "닉네임 검증 None",
+    "method": "PATCH",
+    "url": "http://127.0.0.1:18087/members/me",
+    "request_body": {
+      "nickname": null
+    },
+    "authenticated": true,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "닉네임을 입력해주세요.",
+      "result": null
+    },
+    "body_bytes": 98
+  },
+  {
+    "name": "Body와 query memberId 무시",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/ratings?memberId=3",
+    "request_body": {
+      "movieId": 155,
+      "score": 3,
+      "memberId": 3
+    },
+    "authenticated": true,
+    "status": 201,
+    "response": {
+      "isSuccess": true,
+      "code": "COMMON201",
+      "message": "평점을 등록했습니다.",
+      "result": {
+        "ratingId": 5,
+        "movieId": 155,
+        "score": 3,
+        "comment": null,
+        "createdAt": "2026-11-15T23:48:16.34042",
+        "updatedAt": "2026-11-15T23:48:16.34042"
+      }
+    },
+    "body_bytes": 222
+  },
+  {
+    "name": "남의 평점 삭제",
+    "method": "DELETE",
+    "url": "http://127.0.0.1:18087/ratings/5",
+    "request_body": null,
+    "authenticated": true,
+    "status": 403,
+    "response": {
+      "isSuccess": false,
+      "code": "RATING403_1",
+      "message": "본인이 작성한 평점만 수정하거나 삭제할 수 있습니다.",
+      "result": null
+    },
+    "body_bytes": 140
+  },
+  {
+    "name": "권한 거절 후 B 평점 유지",
+    "method": "GET",
+    "url": "http://127.0.0.1:18087/members/4/ratings",
+    "request_body": null,
+    "authenticated": false,
+    "status": 200,
+    "response": [
+      {
+        "ratingId": 5,
+        "movieId": 155,
+        "score": 3,
+        "comment": null,
+        "createdAt": "2026-11-15T23:48:16",
+        "updatedAt": "2026-11-15T23:48:16"
+      }
+    ],
+    "body_bytes": 123
+  },
+  {
+    "name": "B 평점 정리",
+    "method": "DELETE",
+    "url": "http://127.0.0.1:18087/ratings/5",
+    "request_body": null,
+    "authenticated": true,
+    "status": 200,
+    "response": {
+      "isSuccess": true,
+      "code": "COMMON200",
+      "message": "평점을 삭제했습니다.",
+      "result": null
+    },
+    "body_bytes": 93
+  },
+  {
+    "name": "삭제된 평점 수정",
+    "method": "PATCH",
+    "url": "http://127.0.0.1:18087/ratings/4",
+    "request_body": {
+      "score": 3
+    },
+    "authenticated": true,
+    "status": 404,
+    "response": {
+      "isSuccess": false,
+      "code": "RATING404_1",
+      "message": "해당 평점을 찾을 수 없습니다.",
+      "result": null
+    },
+    "body_bytes": 108
+  },
+  {
+    "name": "없는 회원 조회",
+    "method": "GET",
+    "url": "http://127.0.0.1:18087/members/99999/ratings",
+    "request_body": null,
+    "authenticated": false,
+    "status": 404,
+    "response": {
+      "isSuccess": false,
+      "code": "MEMBER404_1",
+      "message": "해당 회원을 찾을 수 없습니다.",
+      "result": null
+    },
+    "body_bytes": 108
+  },
+  {
+    "name": "평점 입력 검증",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/ratings",
+    "request_body": {
+      "score": 3
+    },
+    "authenticated": true,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "영화 ID를 입력해주세요.",
+      "result": null
+    },
+    "body_bytes": 98
+  },
+  {
+    "name": "평점 입력 검증",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/ratings",
+    "request_body": {
+      "movieId": 0,
+      "score": 3
+    },
+    "authenticated": true,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "영화 ID는 양수여야 합니다.",
+      "result": null
+    },
+    "body_bytes": 102
+  },
+  {
+    "name": "평점 입력 검증",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/ratings",
+    "request_body": {
+      "movieId": 8,
+      "score": 0
+    },
+    "authenticated": true,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "별점은 1점 이상이어야 합니다.",
+      "result": null
+    },
+    "body_bytes": 107
+  },
+  {
+    "name": "평점 입력 검증",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/ratings",
+    "request_body": {
+      "movieId": 8,
+      "score": 6
+    },
+    "authenticated": true,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "별점은 5점 이하여야 합니다.",
+      "result": null
+    },
+    "body_bytes": 104
+  },
+  {
+    "name": "평점 입력 검증",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/ratings",
+    "request_body": {
+      "movieId": 8,
+      "score": 4.5
+    },
+    "authenticated": true,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "요청 JSON 형식 또는 필드 타입이 올바르지 않습니다.",
+      "result": null
+    },
+    "body_bytes": 135
+  },
+  {
+    "name": "평점 입력 검증",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/ratings",
+    "request_body": {
+      "movieId": 8,
+      "score": 3,
+      "comment": "가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가"
+    },
+    "authenticated": true,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "후기는 500자 이하로 입력해주세요.",
+      "result": null
+    },
+    "body_bytes": 112
+  },
+  {
+    "name": "검증 전에 인증",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/ratings",
+    "request_body": {},
+    "authenticated": false,
+    "status": 401,
+    "response": {
+      "isSuccess": false,
+      "code": "AUTH401_2",
+      "message": "로그인이 필요한 요청입니다.",
+      "result": null
+    },
+    "body_bytes": 104
+  },
+  {
+    "name": "잘못된 JSON",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/ratings",
+    "request_body": "{",
+    "authenticated": true,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "요청 JSON 형식 또는 필드 타입이 올바르지 않습니다.",
+      "result": null
+    },
+    "body_bytes": 135
+  },
+  {
+    "name": "숫자가 아닌 평점 ID",
+    "method": "DELETE",
+    "url": "http://127.0.0.1:18087/ratings/abc",
+    "request_body": null,
+    "authenticated": true,
+    "status": 400,
+    "response": {
+      "isSuccess": false,
+      "code": "COMMON4001",
+      "message": "요청 JSON 형식 또는 필드 타입이 올바르지 않습니다.",
+      "result": null
+    },
+    "body_bytes": 135
+  },
+  {
+    "name": "이전 등록 경로 제거",
+    "method": "POST",
+    "url": "http://127.0.0.1:18087/members/3/ratings",
+    "request_body": {
+      "movieId": 8,
+      "score": 3
+    },
+    "authenticated": false,
+    "status": 405,
+    "response": {
+      "timestamp": "2026-11-15T14:48:16.673+00:00",
+      "status": 405,
+      "error": "Method Not Allowed",
+      "message": "Method 'POST' is not supported.",
+      "path": "/members/3/ratings"
+    },
+    "body_bytes": 159
+  },
+  {
+    "name": "이전 수정 경로 제거",
+    "method": "PATCH",
+    "url": "http://127.0.0.1:18087/members/3/ratings/1",
+    "request_body": {
+      "score": 3
+    },
+    "authenticated": true,
+    "status": 404,
+    "response": {
+      "timestamp": "2026-11-15T14:48:16.696+00:00",
+      "status": 404,
+      "error": "Not Found",
+      "message": "No static resource members/3/ratings/1.",
+      "path": "/members/3/ratings/1"
+    },
+    "body_bytes": 160
+  },
+  {
+    "name": "공개 닉네임 체크 유지",
+    "method": "GET",
+    "url": "http://127.0.0.1:18087/members/nickname/unused",
+    "request_body": null,
+    "authenticated": false,
+    "status": 200,
+    "response": {
+      "available": true
+    },
+    "body_bytes": 18
+  },
+  {
+    "name": "공개 이메일 체크 유지",
+    "method": "GET",
+    "url": "http://127.0.0.1:18087/members/email/unused@example.com",
+    "request_body": null,
+    "authenticated": false,
+    "status": 200,
+    "response": {
+      "available": true
+    },
+    "body_bytes": 18
+  }
+]

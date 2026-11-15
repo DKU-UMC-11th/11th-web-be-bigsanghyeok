@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "http_cases": 52,
+  "mysql_version": "26.7.0",
+  "executed_at": "2026-11-15T23:48:16.781132+09:00",
+  "scenario_9_steps": true,
+  "login_failures_identical": true,
+  "bcrypt_salts_differ": true,
+  "jwt_required_claims": {
+    "sub": "3",
+    "email": "a@umc.com",
+    "iat": 1794754093,
+    "exp": 1794757693
+  },
+  "tampered_payload_rejected": true,
+  "ownership_and_persistence": true,
+  "memberId_body_query_cannot_spoof": true,
+  "cors_preflight": true,
+  "delete_200_null_result": true,
+  "fixture_sha256": {
+    "01_schema.sql": "aef93b124a29be738a0771e592ecc84cc632a8bc00fdf361aa39742d62e7c44b",
+    "02_seed.sql": "f7c83f70e822e5ca741ee6440a02403cbb9b7c60d851c8805876fafc3a792744"
+  }
+}

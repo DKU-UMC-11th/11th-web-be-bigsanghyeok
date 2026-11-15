@@ -1,0 +1,25 @@
+{
+  "name": "시나리오 5 본인 수정",
+  "method": "PATCH",
+  "url": "http://127.0.0.1:18087/ratings/4",
+  "request_body": {
+    "score": 5,
+    "comment": "내 토큰으로 수정 완료"
+  },
+  "authenticated": true,
+  "status": 200,
+  "response": {
+    "isSuccess": true,
+    "code": "COMMON200",
+    "message": "평점을 수정했습니다.",
+    "result": {
+      "ratingId": 4,
+      "movieId": 27205,
+      "score": 5,
+      "comment": "내 토큰으로 수정 완료",
+      "createdAt": "2026-11-15T23:48:14",
+      "updatedAt": "2026-11-15T23:48:15.672467"
+    }
+  },
+  "body_bytes": 247
+}
